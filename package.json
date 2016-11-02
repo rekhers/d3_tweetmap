@@ -1,7 +1,7 @@
 {
-  "name": "tweets-USA",
+  "name": "d3-tweet-map",
   "version": "0.0.1",
-  "description": "heatmap of streaming twitter data in the US",
+  "description": "d3 map with streaming tweets",
   "main": "server.js",
   "engines": {
 	  "node": "0.10.34"

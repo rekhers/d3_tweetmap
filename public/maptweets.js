@@ -14,6 +14,8 @@ var width = 1000;
 
   var g = svg.append('g');
 
+
+
   d3.json('https://gist.githubusercontent.com/girliemac/b2fdcd10a5a76d87bef3/raw/698891c4e260e3501ecf235205ce87e2dd20467e/us-states.json', function(error, topology) {
       g.selectAll('path')
       .data(topojson.feature(topology, topology.objects.usStates).features)
@@ -26,10 +28,12 @@ var width = 1000;
 } 
 
 
+
 function initialize(){
 
-  var x = 0;
-  
+  var id;
+var id_arr = [];
+  var z = 0;
   if(io !== undefined) {
        // Storage for WebSocket connections
        var socket = io.connect('/');
@@ -38,57 +42,132 @@ function initialize(){
 
    //   //listens on stream channel
    socket.on('stream', function(tweet) {
-
+        z++;
 
     // if($("#map_canvas").has("svg")){
     //   $("#map_canvas svg").remove();
     // }
    
 //    //longitude and latitutde are reveresed in place object
+
+
+  
+
+
      var tweetLocation = [tweet.coordinates.coordinates[0], tweet.coordinates.coordinates[1]];
 
-//      console.log(tweetLocation);
-
-//    var width = 1000;
-//   var height = 540;
+     id = tweet.id;
 
   var projection = d3.geo.albers();
 
-//   var svg = d3.select('#map_canvas').append('svg')
-//       .attr('width', width)
-//       .attr('height', height);
 
-//   var path = d3.geo.path()
-//       .projection(projection);
+   var url = tweet.user.profile_image_url;
 
-//   var g = svg.append('g');
+  var textBlurb = d3.select("svg").append("g");
 
-//   d3.json('https://gist.githubusercontent.com/girliemac/b2fdcd10a5a76d87bef3/raw/698891c4e260e3501ecf235205ce87e2dd20467e/us-states.json', function(error, topology) {
-//       g.selectAll('path')
-//       .data(topojson.feature(topology, topology.objects.usStates).features)
-//       .enter()
-//       .append('path')
-//       .attr('class', function(d){ return 'states ' + d.properties.STATE_ABBR;} )
-//       .attr('d', path);
-// })  
+  var tweetX = projection(tweetLocation)[0];
 
-var z;
+  var tweetY = projection(tweetLocation)[1];
 
-  d3.select("svg")
-    .append("circle")
-    .attr("cx", function (d) { console.log(projection(tweetLocation)); return projection(tweetLocation)[0]; })
-    .attr("cy", function (d) { return projection(tweetLocation)[1]; })
-    .attr("r", "3px")
-    .attr("fill", "red")
-    .attr("id", function(i){
-      z = i;
-      return "dot_" + z;
-    })
+  $("body").append("<div id='tw" + id + "' class='twDiv'><img class='userPic' src='" + url + "' /><div class='twText'>" + tweet.text + "</div></div>");
+
+  $("#tw" + id).css("left", tweetX - 50).css("top", tweetY).toggle();
 
 
-    setTimeout(function(){
-      d3.select("#dot_" + z).remove();
-    }, 2000);
+   d3.select("svg")
+              .append("circle")
+              .attr("cx", function (d) { return projection(tweetLocation)[0]; })
+              .attr("cy", function (d) { return projection(tweetLocation)[1]; })
+              .attr("r", "15px")
+              .attr("fill", "teal")
+              .style("opacity", .2)
+              .attr("id", function(i){
+                return "dot_" + id;
+              })
+              .attr("class", "dots")
+
+
+
+  // if(z % 2 == 0){
+  //   $("#tw" + y).remove();
+  //   $("#dot_" + y).remove();
+  // }
+
+
+setTimeout(function(){
+  $(".twDiv").remove();
+  $(".dots").remove();
+}, 2000);
+
+
+// setInterval(function(){
+
+//   var x = id
+
+//   id_arr.push(x);
+
+//       setTimeout(function(){
+//         for(var z=0; z<id_arr.length; z++){
+//              $("#dot_" + id_arr[z]).remove();
+//             $("#tw" + id_arr[z]).remove();
+//             id_arr= [];
+//         }
+
+ 
+//       }, 300)
+
+//     }, 500)
+
+
+
+
+
+
+
+
+ //     d3.selectAll('svg')
+ //  .append('image')
+ // .attr("x", function (d) { return projection(tweetLocation)[0]; })
+ //    .attr("y", function (d) { return projection(tweetLocation)[1]; })
+ //  .attr('xlink:href', url)
+ //  .attr('class', 'pic')
+ //  .attr('height', '35')
+ //  .attr('width', '35')
+ //  .attr("id", function(i){
+ //      z = i;
+ 
+ //      return "dot_" + z;
+ //    })
+
+ //     d3.select("svg").append('rect')
+ // .attr("x", function (d) { return projection(tweetLocation)[0] + 60; })
+ //    .attr("y", function (d) { return projection(tweetLocation)[1]; })
+ //    .attr("height", 50)
+ //    .attr("width", 300)
+ //  .style('fill', function(){
+ //    return "steelBlue";
+ //  })
+ //  .attr("id", function(i){
+ //      z = i;
+ //      return "rect" + z;
+ //    });
+
+
+ //        d3.select("svg").append('text')
+ // .attr("x", function (d) { return projection(tweetLocation)[0] + 60; })
+ //    .attr("y", function (d) { return projection(tweetLocation)[1] + 20})
+ //  .attr('class', 'twText')
+ //  .attr("width", 100)
+ //  .attr('height', 50)
+ //  .text(tweet.text)
+ //  .attr("id", function(i){
+ //      z = i;
+ //      return "text" + z;
+ //    });
+
+
+
+
 
  
     
