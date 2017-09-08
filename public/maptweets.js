@@ -31,7 +31,7 @@ var width = 1000;
 
 function initialize(){
 
-  var id;
+  var id; 
 var id_arr = [];
   var z = 0;
   if(io !== undefined) {
@@ -40,34 +40,19 @@ var id_arr = [];
 
    }
 
-   //   //listens on stream channel
    socket.on('stream', function(tweet) {
         z++;
 
-    // if($("#map_canvas").has("svg")){
-    //   $("#map_canvas svg").remove();
-    // }
-   
-//    //longitude and latitutde are reveresed in place object
 
-
-  
-
-
-     var tweetLocation = [tweet.coordinates.coordinates[0], tweet.coordinates.coordinates[1]];
 
      id = tweet.id;
 
-  var projection = d3.geo.albers();
-
-
-   var url = tweet.user.profile_image_url;
-
-  var textBlurb = d3.select("svg").append("g");
-
-  var tweetX = projection(tweetLocation)[0];
-
-  var tweetY = projection(tweetLocation)[1];
+     var tweetLocation = [tweet.coordinates.coordinates[0], tweet.coordinates.coordinates[1]],
+     projection = d3.geo.albers(),
+     url = tweet.user.profile_image_url,
+     textBlurb = d3.select("svg").append("g"),
+    tweetX = projection(tweetLocation)[0],
+    tweetY = projection(tweetLocation)[1];
 
   $("body").append("<div id='tw" + id + "' class='twDiv'><img class='userPic' src='" + url + "' /><div class='twText'>" + tweet.text + "</div></div>");
 
